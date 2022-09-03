@@ -7,21 +7,18 @@ result = []
 
 def solution(x, y, N) :
   color = paper[x][y]
-  print(x,y, N)
+  
   for i in range(x, x+N) :
     for j in range(y, y+N) :
       if color != paper[i][j] :
-        print("i, j:",i,j)
         solution(x, y, N//2)
         solution(x, y+N//2, N//2)
         solution(x+N//2, y, N//2)
         solution(x+N//2, y+N//2, N//2)
         return
   if color == 0 :
-    print("0추가")
     result.append(0)
   else :
-    print("1추가")
     result.append(1)
 
 
