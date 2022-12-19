@@ -1,39 +1,38 @@
 from collections import deque
-from this import d
 
-def dfs(start, graph, visited):
-    graph[start] = sorted(graph[start])
-    visited[start] = 1
-    print(start, end=" ")
-    for n in graph[start]:
-        if visited[n] == 0:
-            dfs(n, graph, visited)
-    return 
+def dfs(graph, visited, start):
+    visited[start] = True
+    print(start, end =" ")
 
-def bfs(start, graph, visited):
+    for i in sorted(graph[start]):
+        if not visited[i]:
+            dfs(graph, visited, i)
+    return
+
+def bfs(graph, visited, start):
     q = deque([start])
     visited[start] = 1
 
     while q:
-        s = q.popleft()
-        print(s, end=" ")
-        for n in graph[s]:
-            if visited[n] == 0:
-                visited[n] = 1
-                q.append(n)
-            
+        node = q.popleft()
+        print(node, end =" ")
+ 
+        for i in sorted(graph[node]):
+            if not visited[i]:
+                visited[i] = True
+                q.append(i)
+    return
 
-n, m, v = map(int,input().split())
-
-graph = [[] for i in range(1000+1)]
-
+n, m, v = map(int, input().split())
+graph = [[] for i in range(n+1)]
+visited = [False] * (n+1)
 
 for i in range(m):
-    n1, n2 = map(int, input().split())
-    graph[n1].append(n2)
-    graph[n2].append(n1)
-    
-dfs_visited = [0 for i in range(1000+1)]
-bfs_visited = [0 for i in range(1000+1)]
-dfs(v, graph, dfs_visited)
-bfs(v, graph, bfs_visited)
+    a, b = map(int, input().split())
+    graph[a].append(b)
+    graph[b].append(a)
+
+dfs(graph, visited, v)
+visited = [False] * (n+1)
+print()
+bfs(graph, visited, v)
