@@ -1,71 +1,38 @@
 from collections import deque
 
-def bfs(graph, visited, row, col):
-    q = deque([[row, col]])
+def range_check(x,y,m,n):
+    if 0<=x<m and 0<=y<n:
+        return True
+    return False
 
-    dx = [-1,1,0,0]
-    dy = [0,0,1,-1]
-
-    while q:
-        r, c = q.popleft()
+def bfs(tomato):
+    total=0
+    dx=[-1,1,0,0]
+    dy=[0,0,-1,1]
+    queue=deque(tomato)
+    while queue:
+        x,y,cnt=queue.popleft() # cnt에는 토마토가 몇초에 자랐는지에 대한 정보가 저장되어있음
+        if cnt>total:
+            total=cnt
         for i in range(4):
-            nx = dx[i] + r
-            ny = dy[i] + c
-
-            if nx < 0 or ny < 0 or nx >= len(graph) or ny >= len(graph[0]):
-                continue
-
-            if graph[nx][ny] == 1:
-                # print("1 : ", nx,ny)
-                continue
-
-            elif graph[nx][ny] == 0:
-                # print("2: ", nx,ny)
-                graph[nx][ny] = graph[r][c] + 1
-                q.append([nx,ny])
-
-            elif graph[nx][ny] != -1:
-                # print("3 : ", nx,ny)
-                if graph[nx][ny] < graph[r][c] + 1:
-                    continue
-
-                graph[nx][ny] = graph[r][c] + 1
-                q.append([nx,ny])
-
-
-m, n = map(int,input().split()) 
+            nx=x+dx[i]
+            ny=y+dy[i]
+            if range_check(nx,ny,m,n):
+                if array[nx][ny] == 0:
+                    array[nx][ny] = 1
+                    queue.append([nx,ny,cnt+1]) # 토마토가 자란다
+    return total
+n,m=map(int,input().split())
+array=[]
 tomato = []
-live = []
-notlive = []
-visited = [[False for i in range(m)] for i in range(n)]
-
-for i in range(n):
-    temp = list(map(int,input().split()))
-    for j in range(len(temp)):
-        if temp[j] == 1:
-            live.append([i,j])
-        if temp[j] == 0:
-            notlive.append([i,j])
-    tomato.append(temp)
-
-
-if len(live) == 0:
-    print(-1)
-else:
-    for i in range(len(live)):
-        bfs(tomato, visited, live[i][0], live[i][1])
-
-tmax = -1
-flag = False
-
-for i in notlive:
-    if tomato[i[0]][i[1]] == 0:
-        flag = True
-        break
-    if tomato[i[0]][i[1]] > tmax:
-        tmax = tomato[i[0]][i[1]]
-
-if flag:
-    print(-1)
-else:
-    print(tmax-1)
+for i in range(m):
+    tmp_array = list(map(int,input().split()))
+    array.append(tmp_array)
+    for j in range(n):
+        if array[i][j] == 1:
+            tomato.append([i,j,0])
+answer=bfs(tomato)
+for row in array: 
+    if 0 in row: # 완료했는데 토마토가 자라지 않은 구역이 있는 경우
+        answer=-1
+print(answer)
